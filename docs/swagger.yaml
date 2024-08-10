@@ -29,8 +29,50 @@ definitions:
         type: string
     type: object
   main.CreateBookRequest:
+    properties:
+      author:
+        example: George Orwell
+        type: string
+      description:
+        type: string
+      is_available:
+        example: true
+        type: boolean
+      language:
+        example: English
+        type: string
+      price:
+        example: 0
+        type: number
+      publisher:
+        example: Secker & Warburg
+        type: string
+      title:
+        example: "1984"
+        type: string
     type: object
   main.UpdateBookRequest:
+    properties:
+      author:
+        example: George Orwell
+        type: string
+      description:
+        type: string
+      is_available:
+        example: true
+        type: boolean
+      language:
+        example: English
+        type: string
+      price:
+        example: 0
+        type: number
+      publisher:
+        example: Secker & Warburg
+        type: string
+      title:
+        example: "1984"
+        type: string
     type: object
 host: localhost:8080
 info:

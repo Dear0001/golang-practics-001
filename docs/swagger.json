@@ -177,10 +177,68 @@
             }
         },
         "main.CreateBookRequest": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "author": {
+                    "type": "string",
+                    "example": "George Orwell"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "is_available": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "language": {
+                    "type": "string",
+                    "example": "English"
+                },
+                "price": {
+                    "type": "number",
+                    "example": 0
+                },
+                "publisher": {
+                    "type": "string",
+                    "example": "Secker \u0026 Warburg"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "1984"
+                }
+            }
         },
         "main.UpdateBookRequest": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "author": {
+                    "type": "string",
+                    "example": "George Orwell"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "is_available": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "language": {
+                    "type": "string",
+                    "example": "English"
+                },
+                "price": {
+                    "type": "number",
+                    "example": 0
+                },
+                "publisher": {
+                    "type": "string",
+                    "example": "Secker \u0026 Warburg"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "1984"
+                }
+            }
         }
     }
 }
