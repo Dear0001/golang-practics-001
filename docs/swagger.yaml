@@ -1,0 +1,130 @@
+basePath: /
+definitions:
+  main.Book:
+    properties:
+      author:
+        example: George Orwell
+        type: string
+      description:
+        example: A dystopian novel set in Airstrip One, a province of the superstate
+          Oceania.
+        type: string
+      id:
+        example: "1"
+        type: string
+      is_available:
+        example: true
+        type: boolean
+      language:
+        example: English
+        type: string
+      price:
+        example: 8.99
+        type: number
+      publisher:
+        example: Secker & Warburg
+        type: string
+      title:
+        example: "1984"
+        type: string
+    type: object
+  main.CreateBookRequest:
+    type: object
+  main.UpdateBookRequest:
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server for managing books.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Book API
+  version: "1.0"
+paths:
+  /books:
+    get:
+      description: Get details of all books
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/main.Book'
+            type: array
+      summary: Get all books
+      tags:
+      - books
+    post:
+      consumes:
+      - application/json
+      description: Create a new book with the input payload
+      parameters:
+      - description: Book to create
+        in: body
+        name: book
+        required: true
+        schema:
+          $ref: '#/definitions/main.CreateBookRequest'
+      produces:
+      - application/json
+      responses: {}
+      summary: Create a new book
+      tags:
+      - books
+  /books/{id}:
+    delete:
+      description: Delete a book by its ID
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses: {}
+      summary: Delete a book
+      tags:
+      - books
+    get:
+      description: Get details of a book by its ID
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get a book by ID
+      tags:
+      - books
+    put:
+      consumes:
+      - application/json
+      description: Update details of a book by its ID
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated book
+        in: body
+        name: book
+        required: true
+        schema:
+          $ref: '#/definitions/main.UpdateBookRequest'
+      produces:
+      - application/json
+      responses: {}
+      summary: Update a book
+      tags:
+      - books
+swagger: "2.0"
