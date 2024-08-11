@@ -68,7 +68,7 @@ func main() {
 	r.PUT("/books/:id", updateBook)
 	r.DELETE("/books/:id", deleteBook)
 
-	r.Run() // listen and serve on 0.0.0.0:8080
+	r.Run()
 }
 
 // getBooks godoc
@@ -81,7 +81,9 @@ func main() {
 func getBooks(c *gin.Context) {
 	rows, err := db.Query("SELECT id, title, author, publisher, language, price, is_available, description FROM books")
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 	defer rows.Close()
@@ -90,13 +92,18 @@ func getBooks(c *gin.Context) {
 	for rows.Next() {
 		var book Book
 		if err := rows.Scan(&book.ID, &book.Title, &book.Author, &book.Publisher, &book.Language, &book.Price, &book.IsAvailable, &book.Description); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
 			return
 		}
 		books = append(books, book)
 	}
 
-	c.JSON(http.StatusOK, books)
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Get all books successfully",
+		"payload": books,
+	})
 }
 
 // getBookByID godoc
@@ -116,12 +123,17 @@ func getBookByID(c *gin.Context) {
 		if errors.Is(err, sql.ErrNoRows) {
 			c.JSON(http.StatusNotFound, gin.H{"message": "book not found"})
 		} else {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
 		}
 		return
 	}
 
-	c.JSON(http.StatusOK, book)
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Get book by ID successfully",
+		"payload": book,
+	})
 }
 
 // createBook godoc
@@ -135,7 +147,9 @@ func getBookByID(c *gin.Context) {
 func createBook(c *gin.Context) {
 	var newBookRequest CreateBookRequest
 	if err := c.BindJSON(&newBookRequest); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
@@ -145,7 +159,9 @@ func createBook(c *gin.Context) {
 		newBookRequest.Title, newBookRequest.Author, newBookRequest.Publisher, newBookRequest.Language, newBookRequest.Price, newBookRequest.IsAvailable, newBookRequest.Description).
 		Scan(&newBook.ID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
@@ -157,7 +173,10 @@ func createBook(c *gin.Context) {
 	newBook.IsAvailable = newBookRequest.IsAvailable
 	newBook.Description = newBookRequest.Description
 
-	c.JSON(http.StatusCreated, newBook)
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "The book has been created successfully",
+		"payload": newBook,
+	})
 }
 
 // updateBook godoc
@@ -173,7 +192,9 @@ func updateBook(c *gin.Context) {
 	id := c.Param("id")
 	var updatedBookRequest UpdateBookRequest
 	if err := c.BindJSON(&updatedBookRequest); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
@@ -181,22 +202,31 @@ func updateBook(c *gin.Context) {
 		"UPDATE books SET title = $1, author = $2, publisher = $3, language = $4, price = $5, is_available = $6, description = $7 WHERE id = $8",
 		updatedBookRequest.Title, updatedBookRequest.Author, updatedBookRequest.Publisher, updatedBookRequest.Language, updatedBookRequest.Price, updatedBookRequest.IsAvailable, updatedBookRequest.Description, id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
 	rowsAffected, err := result.RowsAffected()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
 	if rowsAffected == 0 {
-		c.JSON(http.StatusNotFound, gin.H{"message": "book not found"})
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": "The book not found with ID: " + id,
+		})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "book updated"})
+	c.JSON(http.StatusOK, gin.H{
+		"message": "The book has been updated successfully",
+		"payload": updatedBookRequest,
+	})
 }
 
 // deleteBook godoc
@@ -210,20 +240,28 @@ func deleteBook(c *gin.Context) {
 
 	result, err := db.Exec("DELETE FROM books WHERE id = $1", id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
 	rowsAffected, err := result.RowsAffected()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
 	if rowsAffected == 0 {
-		c.JSON(http.StatusNotFound, gin.H{"message": "book not found"})
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": "The book not found with ID: " + id,
+		})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "book deleted"})
+	c.JSON(http.StatusOK, gin.H{
+		"message": "The book has been deleted successfully",
+	})
 }
